@@ -136,6 +136,12 @@ impl Default for MoongateServer {
     }
 }
 
+impl MoongateServer {
+    pub fn from_config(port: u64, gpu_id: u64) -> Self {
+        Self::Local { visible_device_index: Some(gpu_id), port: Some(port) }
+    }
+}
+
 impl SP1CudaProver {
     /// Creates a new [SP1CudaProver] that can be used to communicate with the Moongate server at
     /// `moongate_endpoint`, or if not provided, create one that runs inside a Docker container.

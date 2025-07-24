@@ -59,6 +59,20 @@ impl EnvProver {
                 check_release_build();
                 Box::new(CudaProver::new(SP1Prover::new(), MoongateServer::default()))
             }
+            "cuda-configed" => {
+                check_release_build();
+                let port = if let Ok(port) = env::var("MOONGATE_PORT") {
+                    port.parse::<u64>().unwrap()
+                } else {
+                    panic!("MOONGATE_PORT not defined")
+                };
+                let gpu_id = if let Ok(gpu_id) = env::var("MOONGATE_GPU") {
+                    gpu_id.parse::<u64>().unwrap()
+                } else {
+                    panic!("MOONGATE_GPU not defined")
+                };
+                Box::new(CudaProver::new(SP1Prover::new(), MoongateServer::from_config(port, gpu_id)))
+            }
             "network" => {
                 #[cfg(not(feature = "network"))]
                 panic!(
